@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import passport from "passport";
+import cookieSession from "cookie-session";
 
 // routes
 import authRoute from "./routes/authRoute.js";
@@ -10,16 +12,26 @@ import authRoute from "./routes/authRoute.js";
 dotenv.config();
 
 const app = express();
-
-app.use(cookieParser());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "https://localhost:3000",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT"],
   })
 );
+
+app.use(
+  cookieSession({
+    name: "session",
+    keys: [process.env.SEESION_KEY],
+    maxAge: 24 * 60 * 60 * 2000,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 const PORT = process.env.PORT || 3000;
 
