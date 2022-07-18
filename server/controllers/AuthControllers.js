@@ -83,6 +83,7 @@ export const loginSuccess = (req, res) => {
       userData: req.user,
       cookies: req.cookies
     });
+    console.log("dir wotking")
   }
 };
 

@@ -4,6 +4,8 @@ import { signUp, login, loginSuccess, loginFailed, logout } from "../controllers
 
 const router = express.Router();
 
+const CLIENT_URL = "http://localhost:3000/";
+
 router.post("/signup", signUp);
 router.post("/login", login);
 
@@ -15,7 +17,7 @@ router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
 router.get(
     "/google/callback",
     passport.authenticate("google", {
-        successReirect: process.env.CLIENT_URL, 
+        successReirect: CLIENT_URL, 
         failureRedirect: "login/failed"
     })
 );
@@ -25,7 +27,7 @@ router.get("/github", passport.authenticate("github", { scope: ["profile"] }));
 router.get(
     "/github/callback",
     passport.authenticate("github", {
-      successRedirect: process.env.CLIENT_URL,
+      successRedirect: CLIENT_URL,
       failureRedirect: "/login/failed",
     })
   );

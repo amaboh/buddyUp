@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import authenticateUser from "./config/passport.js";
 import passport from "passport";
 import cookieSession from "cookie-session";
 
@@ -12,13 +13,16 @@ import authRoute from "./routes/authRoute.js";
 dotenv.config();
 
 const app = express();
+
 app.use(express.json());
 app.use(cookieParser());
+
 
 app.use(
   cors({
     origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT"],
+    credentials: true,
   })
 );
 
@@ -44,12 +48,13 @@ const connect = async () => {
   }
 };
 
+
 mongoose.connection.on("disconnected", () => {
   console.log("mongoDB disconnected!");
 });
 
 // routes entry points
-app.use("/api/auth/", authRoute);
+app.use("/auth", authRoute);
 
 app.listen(PORT, () => {
   connect();
