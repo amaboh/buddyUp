@@ -74,16 +74,14 @@ export const login = async (req, res, next) => {
 
 // Login success
 export const loginSuccess = (req, res) => {
-  if (req.use) {
-    res
-    .status(200)
-    .json({
+  if (req.user) {
+    res.status(200).json({
       success: true,
       message: "successfull",
-      userData: req.user,
-      cookies: req.cookies
+      user: req.user,
+      cookies: req.cookies,
     });
-    console.log("dir wotking")
+   
   }
 };
 

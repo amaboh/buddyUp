@@ -14,18 +14,18 @@ const userSchema = new schema(
     password: {
       type: String,
       required: true,
+      
     },
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
+    displayName: {
       type: String,
       required: true,
     },
     isAdmin: {
       type: Boolean,
       default: false,
+    },
+    socialProfile:{
+      type: String,
     },
     profilePicture: String,
     about: String,
