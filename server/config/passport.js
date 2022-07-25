@@ -10,7 +10,7 @@ dotenv.config();
 
 import passport from "passport";
 import User from "../models/User.js";
-``;
+;
 
 passport.use(
   new GoogleStrategy(
@@ -55,7 +55,6 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(profile.id, salt);
-      
       const newUser = {
         socialId: profile.nodeId,
         username: profile.username,
