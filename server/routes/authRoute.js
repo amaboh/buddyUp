@@ -1,13 +1,15 @@
 import express from "express";
 import passport from "passport";
-import { signUp, login, loginSuccess, loginFailed, logout } from "../controllers/AuthControllers.js";
+import { signUp, login, loginSuccess, loginFailed, logout, activateEmail, getAccessToken } from "../controllers/AuthControllers.js";
 
 const router = express.Router();
 
 const CLIENT_URL = "http://localhost:3000/";
 
 router.post("/signup", signUp);
+router.post("/activation", activateEmail)
 router.post("/login", login);
+router.post("/refresh_token", getAccessToken)
 
 router.get("/login/success", loginSuccess);
 router.get("/login/failed", loginFailed);

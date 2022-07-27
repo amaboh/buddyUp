@@ -40,7 +40,7 @@ const userSchema = new schema(
     },
     about: String,
     worksAt: String,
-    language: String,
+    techstack: String,
     country: String,
     followers: [],
     following: [],

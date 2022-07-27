@@ -7,13 +7,14 @@ import authenticateUser from "./config/passport.js";
 import passport from "passport";
 import cookieSession from "cookie-session";
 
-// routes
+// access environment variable
+dotenv.config()
+
 import authRoute from "./routes/authRoute.js";
 
-
-dotenv.config();
-
 const app = express();
+
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -25,6 +26,7 @@ app.use(
     credentials: true,
   })
 );
+
 
 app.use(
   cookieSession({
