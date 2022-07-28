@@ -92,19 +92,23 @@ export const login = async (req, res, next) => {
       return next(createError(400, "Wrong password or username!"));
 
     // implementing authorization with JWT
-    const refresh_token = createRefreshToken({id: user._id});
+    const refresh_token = createRefreshToken({ id: user._id });
 
     const { password, isAdmin, ...otherDetails } = user._doc;
     res
       .cookie("refreshtoken", refresh_token, {
         httpOnly: true,
         path: "auth/refresh_token",
-        maxAge: 7*24*60*60*1000 // 7days
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7days
       })
       .status(200)
-      .json({ userDetails: { ...otherDetails }, isAdmin, msg: "Login successful"});
+      .json({
+        userDetails: { ...otherDetails },
+        isAdmin,
+        msg: "Login successful",
+      });
   } catch (error) {
-    res.status(500).json({msg: error.message});
+    res.status(500).json({ msg: error.message });
   }
 };
 
@@ -120,22 +124,54 @@ export const loginSuccess = (req, res) => {
   }
 };
 
-export const getAccessToken = (req, res) =>{
-
+export const getAccessToken = (req, res) => {
   try {
-    const rf_token = req.cookies.refreshtoken
-    if(!rf_token) return res.status(400).json({msg: "please login now!"})
+    const rf_token = req.cookies.refreshtoken;
+    if (!rf_token) return res.status(400).json({ msg: "please login now!" });
 
     jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-      if(err) return res.status(err).json({msg: "Please login now!"})
+      if (err) return res.status(err).json({ msg: "Please login now!" });
 
-      const access_token = createAccessToken({id: user.id})
-      res.json({access_token})
-    })
+      const access_token = createAccessToken({ id: user.id });
+      res.json({ access_token });
+    });
   } catch (error) {
-    return res.status(500).json({msg: error.message})
+    return res.status(500).json({ msg: error.message });
   }
-} 
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user)
+      return res.status(400).json({ msg: "This email does not exist." });
+
+    const access_token = createAccessToken({ id: user._id });
+    const url = `${CLIENT_URL}/auth/reset/${access_token}`;
+
+    sendEmail(email, url, "Reset yoou password");
+    res.json({ msg: "Re-send the password, please check your email." });
+  } catch (error) {
+    return res.status(500).json({ msg: error.message });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { password } = req.body;
+    console.log(password);
+
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
+
+    await User.findOneAndUpdate({ _id: req.user.id }, { password: hash });
+
+    res.json({ msg: "Password successfully changed!" });
+  } catch (error) {
+    return res.status(500).json({ msg: error.message });
+  }
+};
 
 
 // Login failed
@@ -146,9 +182,16 @@ export const loginFailed = (req, res) => {
   });
 };
 
-export const logout = (req, res) => {
-  req.logout();
-  res.redirect(process.env.CLIENT_URL);
+export const logout = async (req, res, next) => {
+  try {
+
+    res.clearCookie("refreshtoken", { path: "/auth/refresh_token" })
+    return res
+      .json({ msg: "Logged out" })
+      .redirect(process.env.CLIENT_URL);
+  } catch (error) {
+    return res.status(500).json({ msg: error.message });
+  }
 };
 
 function validateEmail(email) {

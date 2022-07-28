@@ -8,13 +8,12 @@ import passport from "passport";
 import cookieSession from "cookie-session";
 
 // access environment variable
-dotenv.config()
+dotenv.config();
 
 import authRoute from "./routes/authRoute.js";
+import userRoute from "./routes/userRoute.js";
 
 const app = express();
-
-
 
 app.use(express.json());
 app.use(cookieParser());
@@ -26,7 +25,6 @@ app.use(
     credentials: true,
   })
 );
-
 
 app.use(
   cookieSession({
@@ -56,10 +54,9 @@ mongoose.connection.on("disconnected", () => {
 
 // routes entry points
 app.use("/auth", authRoute);
+app.use("/user", userRoute);
 
 app.listen(PORT, () => {
   connect();
   console.log(`server connected to http://localhost:${PORT}`);
 });
-
-
