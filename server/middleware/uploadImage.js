@@ -2,6 +2,7 @@ import fs from "fs";
 
 export default async function (req, res, next) {
     try {
+        console.log(req.files)
         if(!req.files || Object.keys(req.files).length === 0)
             return res.status(400).json({msg: "No files uploaded."})
             
@@ -24,7 +25,7 @@ export default async function (req, res, next) {
 }
 
 const removeTmp = (path) => {
-  fs.unlink(path, err => {
+  fs.unlinkSync(path, (err)=>{
     if (err) throw err;
   });
 };

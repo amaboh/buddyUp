@@ -6,6 +6,7 @@ import cors from "cors";
 import authenticateUser from "./config/passport.js";
 import passport from "passport";
 import cookieSession from "cookie-session";
+import fileUpload from "express-fileupload";
 
 // access environment variable
 dotenv.config();
@@ -18,6 +19,9 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(fileUpload({
+  useTemplate: true
+}))
 
 app.use(
   cors({

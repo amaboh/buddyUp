@@ -36,7 +36,7 @@ const uploadController = {
 };
 
 const removeTmp = (path) => {
-  fs.unlink(path, (err) => {
+  fs.unlinkSync(path, (err) => {
     if (err) throw err;
   });
 };
