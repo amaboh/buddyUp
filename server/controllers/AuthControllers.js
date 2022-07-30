@@ -12,7 +12,7 @@ import {
 } from "../utils/tokens.js";
 import sendEmail from "../utils/sendEmail.js";
 
-const { CLIENT_URL } = process.env;
+const { CLIENT_URL, SERVER_URL } = process.env;
 // signUp user
 
 export const signUp = async (req, res, next) => {
@@ -184,11 +184,13 @@ export const loginFailed = (req, res) => {
 
 export const logout = async (req, res, next) => {
   try {
-
-    res.clearCookie("refreshtoken", { path: "/auth/refresh_token" })
+  
+    res.clearCookie("refreshtoken", { path: `${SERVER_URL}/auth/refresh_token`})
     return res
-      .json({ msg: "Logged out" })
-      .redirect(process.env.CLIENT_URL);
+      .json({ msg: "Logged out" }).end()
+
+      // res.redirect(CLIENT_URL)
+      
   } catch (error) {
     return res.status(500).json({ msg: error.message });
   }

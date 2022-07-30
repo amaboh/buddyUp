@@ -12,6 +12,7 @@ dotenv.config();
 
 import authRoute from "./routes/authRoute.js";
 import userRoute from "./routes/userRoute.js";
+import uploadRoute from "./routes/uploadRoute.js";
 
 const app = express();
 
@@ -55,6 +56,7 @@ mongoose.connection.on("disconnected", () => {
 // routes entry points
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
+app.use("/api", uploadRoute);
 
 app.listen(PORT, () => {
   connect();
